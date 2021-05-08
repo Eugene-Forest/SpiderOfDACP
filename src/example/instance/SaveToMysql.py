@@ -12,6 +12,12 @@ insert_detail = ("replace into detail "
                  "(site_class,id,nos,type_class,content) "
                  "values (%s,%s,%s,%s,%s)")
 
+delete_news_record = ("delete from news "
+                      "where site_class = %s")
+
+delete_detail_record = ("delete from detail "
+                        "where site_class = %s")
+
 
 def save_to_mysql(news_list, site_type: SiteClass):
     """
@@ -33,6 +39,8 @@ def save_to_mysql(news_list, site_type: SiteClass):
         # 清空数据
         # cursor.execute("truncate table news")
         # cursor.execute("truncate table detail")
+        cursor.execute(delete_news_record % site_type)
+        cursor.execute(delete_detail_record % site_type)
         # 定义新闻id标识
         i = 0
         # 开始循环插入新闻记录

@@ -34,6 +34,7 @@ def get_news_from_hzu():
             news.set_publish(time)
             # 判断新闻链接是否完整，如果不完整则补充前缀
             if "http" not in link:
+                # print(title)
                 news = __get_news_link_content(news, HZU_NEWS_LINK + link)
             else:
                 news.set_link(link)
@@ -72,16 +73,21 @@ def __get_news_link_content(news: News, article_url):
         article = bs.find('div', {'class': 'wp_articlecontent'})
         paragraphs = []
         # 找到主体
-        for item in article.children:
+        for item in article.find_all('p'):
             # 判断是否为图片部分
-            if item['style'] == 'text-align:center':
+            if item.attrs['style'] == 'text-align:center' \
+                    or item.attrs['style'] == 'text-align:center;':
                 # 该部分依赖网页结构不变才可获取图片链接，否则会报错
                 link = item.find('img').attrs['src']
                 if 'http' not in link:
                     link = HZU_NEWS_LINK + link
                 paragraphs.append(Paragraph(content_type=ContentType.IMAGE, content=link))
             else:
-                paragraphs.append(Paragraph(content_type=ContentType.TEXT, content=item.get_text()))
+                text = item.get_text()
+                if text is '' or None:
+                    continue
+                else:
+                    paragraphs.append(Paragraph(content_type=ContentType.TEXT, content=item.get_text()))
         news.set_paragraphs(paragraphs)
         return news
     except AttributeError as e:
