@@ -1,0 +1,19 @@
+GetNewsFromGitee运行后的结果为：
+
+该部分为动态区，但是通过程序直接获取的数据只是如下代码：
+
+----------code result-------------
+<div id="event-timeline-app">
+<event-panel :options='{"mode":"community_user_contribution",
+"hide_actionbar":true,
+"load_event_path":"/eugene-forest/contribution_timeline",
+"per_page":10}'></event-panel>
+</div>
+----------------------------------
+
+通过测试，发现网站有一个开发API端口即：
+https://gitee.com/eugene-forest/contribution_timeline
+
+通过该链接可以直接获取个人公开动态的原数据。
+
+我们可以直接分析原始json数据以此获取目标信息。
